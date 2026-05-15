@@ -1,0 +1,22 @@
+# pulsectl example configuration
+# Copy this file to config.yaml and adjust values as needed.
+
+# webhook_url is the endpoint that receives degraded-service notifications.
+webhook_url: "https://hooks.example.com/services/T000/B000/xxxx"
+
+# interval_seconds controls how often all services are polled (default: 30).
+interval_seconds: 30
+
+# timeout_seconds is the per-request HTTP timeout when probing a service (default: 5).
+timeout_seconds: 5
+
+# services is the list of endpoints to monitor.
+services:
+  - name: "api-gateway"
+    url: "https://api.example.com/health"
+
+  - name: "auth-service"
+    url: "https://auth.example.com/ping"
+
+  - name: "payment-service"
+    url: "https://payments.example.com/status"
