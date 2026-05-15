@@ -1,23 +1,15 @@
-// Package history provides an in-memory, thread-safe rolling buffer of
-// health-check results keyed by endpoint URL.
+// Package history provides a bounded, in-memory record of health-check
+// results for each monitored endpoint.
 //
-// # Overview
+// It tracks the N most-recent statuses per service, detects status
+// transitions (healthy → degraded and vice-versa), and exposes a
+// snapshot of all recorded data for reporting purposes.
 //
-// A [Store] retains at most N [Record] values per endpoint. Once the buffer
-// is full the oldest entry is evicted automatically, keeping memory usage
-// bounded regardless of how long pulsectl runs.
+// Typical usage:
 //
-// # Typical usage
-//
-//	store := history.New(20)          // keep last 20 checks per endpoint
-//
-//	// after each check:
-//	store.Add(url, healthy, errMsg)
-//
-//	// before notifying — skip if status hasn't changed:
-//	if store.StatusChanged(url) {
-//	    notifier.Notify(ctx, payload)
+//	h := history.New(10)
+//	h.Add("api", checker.Status{Healthy: true})
+//	if h.StatusChanged("api") {
+//		// notify or log the transition
 //	}
-//
-// The zero value is not usable; always construct a Store with [New].
 package history
